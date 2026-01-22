@@ -11,35 +11,33 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { routes } from "@/config/routes";
 import { SESSION_COOKIE } from "@/lib/auth-constants";
-import { registerSchema, type RegisterValues } from "@/lib/validators";
+import { mfaSchema, type MfaValues } from "@/lib/validators";
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/slices/authSlice";
 
-export default function RegisterPage() {
+export default function MfaPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const form = useForm<RegisterValues>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<MfaValues>({
+    resolver: zodResolver(mfaSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
+      code: "",
     },
   });
 
-  const onSubmit = (values: RegisterValues) => {
+  const onSubmit = () => {
     document.cookie = `${SESSION_COOKIE}=demo; path=/`;
     dispatch(
       setUser({
         id: "user-1",
-        name: values.name,
-        email: values.email,
+        name: "Avery Park",
+        email: "avery@iotnexus.dev",
         role: "Operator",
       }),
     );
     toast({
-      title: "Welcome aboard",
-      description: `Account created for ${values.name}`,
+      title: "MFA verified",
+      description: "You are now signed in.",
     });
     router.push(routes.app.dashboard);
   };
@@ -47,9 +45,9 @@ export default function RegisterPage() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Create account</CardTitle>
+        <CardTitle>Multi-factor verification</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Get instant access to the IoT Nexus control room.
+          Enter the 6-digit code from your authenticator app.
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -57,52 +55,26 @@ export default function RegisterPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Verification code</FormLabel>
                   <FormControl>
-                    <Input placeholder="Avery Park" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="you@company.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
+                    <Input placeholder="123456" inputMode="numeric" maxLength={6} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button type="submit" className="w-full">
-              Create account
+              Verify and continue
             </Button>
           </form>
         </Form>
         <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
+          Prefer password login?{" "}
           <Link href={routes.auth.login} className="font-medium text-primary hover:underline">
-            Sign in
+            Back to sign in
           </Link>
         </p>
       </CardContent>

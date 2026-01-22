@@ -10,46 +10,33 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { routes } from "@/config/routes";
-import { SESSION_COOKIE } from "@/lib/auth-constants";
-import { registerSchema, type RegisterValues } from "@/lib/validators";
-import { useAppDispatch } from "@/store/hooks";
-import { setUser } from "@/store/slices/authSlice";
+import { resetPasswordSchema, type ResetPasswordValues } from "@/lib/validators";
 
-export default function RegisterPage() {
+export default function ResetPasswordPage() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const form = useForm<RegisterValues>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<ResetPasswordValues>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      code: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  const onSubmit = (values: RegisterValues) => {
-    document.cookie = `${SESSION_COOKIE}=demo; path=/`;
-    dispatch(
-      setUser({
-        id: "user-1",
-        name: values.name,
-        email: values.email,
-        role: "Operator",
-      }),
-    );
+  const onSubmit = () => {
     toast({
-      title: "Welcome aboard",
-      description: `Account created for ${values.name}`,
+      title: "Password updated",
+      description: "You can now sign in with your new password.",
     });
-    router.push(routes.app.dashboard);
+    router.push(routes.auth.login);
   };
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Create account</CardTitle>
+        <CardTitle>Set a new password</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Get instant access to the IoT Nexus control room.
+          Enter the reset code and choose a secure password.
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -57,25 +44,12 @@ export default function RegisterPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Reset code</FormLabel>
                   <FormControl>
-                    <Input placeholder="Avery Park" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="you@company.com" {...field} />
+                    <Input placeholder="Enter the 6-digit code" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -86,7 +60,20 @@ export default function RegisterPage() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>New password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="********" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm password</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="********" {...field} />
                   </FormControl>
@@ -95,14 +82,14 @@ export default function RegisterPage() {
               )}
             />
             <Button type="submit" className="w-full">
-              Create account
+              Update password
             </Button>
           </form>
         </Form>
         <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Link href={routes.auth.login} className="font-medium text-primary hover:underline">
-            Sign in
+          Need a new code?{" "}
+          <Link href={routes.auth.forgotPassword} className="font-medium text-primary hover:underline">
+            Request another
           </Link>
         </p>
       </CardContent>

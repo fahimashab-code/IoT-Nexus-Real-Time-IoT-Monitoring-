@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IoT Nexus — Real-Time IoT Monitoring Dashboard
+
+Professional IoT dashboard starter built with the Next.js App Router. It includes a public marketing site, auth scaffolding, and a protected app area with device telemetry visualizations.
+
+## Features
+
+- App Router layouts for public, auth, and dashboard experiences.
+- Fake auth gate with middleware protection for `/app/*`.
+- Dashboard with Recharts time-series and configurable gauge cards.
+- Device detail view with mock live telemetry and polling controls.
+- Dark/light theme with Tailwind CSS tokens.
+- Redux Toolkit for UI/session state and a mock-data service layer.
+
+## Tech Stack
+
+- Next.js (App Router) + TypeScript (strict)
+- Tailwind CSS + shadcn/ui
+- Redux Toolkit
+- Recharts
+- React Hook Form + Zod
+- Lucide React icons
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To access the protected app routes, use the dummy auth screen:
+- Visit `http://localhost:3000/login`
+- Any credentials are accepted; a demo cookie is set automatically.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Routes
 
-## Learn More
+- `/` Landing page
+- `/pricing`
+- `/login`
+- `/register`
+- `/forgot-password`
+- `/reset-password`
+- `/mfa`
+- `/app/dashboard`
+- `/app/devices`
+- `/app/devices/[deviceId]`
+- `/app/alerts`
+- `/app/settings`
 
-To learn more about Next.js, take a look at the following resources:
+## Gauge Controls
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Each gauge card includes a 3-dot menu for settings:
+- Range min/max
+- Threshold colors and limits
+- Reducer (last/avg/min/max/delta)
+- Color mode (thresholds/value/neutral)
+- Orientation (semi/full)
+- No-data behavior
+- Unit + decimals
+- Display toggles and value mappings
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+src/
+  app/                # App Router routes + layouts
+  components/         # UI and dashboard components
+  config/             # Navigation and route constants
+  lib/                # Auth, validators, gauge logic, utils
+  services/           # Mock data providers
+  store/              # Redux Toolkit store and slices
+  types/              # Shared TypeScript types
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` Start dev server
+- `npm run build` Production build
+- `npm run start` Run production server
+- `npm run lint` Lint check

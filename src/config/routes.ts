@@ -6,6 +6,9 @@ export const routes = {
   auth: {
     login: "/login",
     register: "/register",
+    forgotPassword: "/forgot-password",
+    resetPassword: "/reset-password",
+    mfa: "/mfa",
   },
   app: {
     dashboard: "/app/dashboard",

@@ -44,7 +44,7 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Sign in</CardTitle>
         <p className="text-sm text-muted-foreground">
@@ -72,7 +72,15 @@ export default function LoginPage() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Password</FormLabel>
+                    <Link
+                      href={routes.auth.forgotPassword}
+                      className="text-xs text-primary hover:underline"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
                   <FormControl>
                     <Input type="password" placeholder="********" {...field} />
                   </FormControl>
@@ -85,6 +93,9 @@ export default function LoginPage() {
             </Button>
           </form>
         </Form>
+        <Button variant="outline" className="w-full" asChild>
+          <Link href={routes.auth.mfa}>Use MFA instead</Link>
+        </Button>
         <p className="text-center text-sm text-muted-foreground">
           New here?{" "}
           <Link href={routes.auth.register} className="font-medium text-primary hover:underline">

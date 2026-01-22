@@ -1,21 +1,23 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { routeBuilders } from "@/config/routes";
-import { getDevices } from "@/services/mockData";
 import type { Device } from "@/types";
 
 const PAGE_SIZE = 8;
 
 type SortKey = "name" | "status" | "location" | "battery";
 
-export function DeviceTable() {
-  const devices = getDevices();
+interface DeviceTableProps {
+  devices: Device[];
+}
+
+export function DeviceTable({ devices }: DeviceTableProps) {
   const [page, setPage] = useState(1);
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
@@ -35,8 +37,14 @@ export function DeviceTable() {
     return list;
   }, [devices, sortKey, sortDir]);
 
-  const totalPages = Math.ceil(sortedDevices.length / PAGE_SIZE);
+  const totalPages = Math.max(1, Math.ceil(sortedDevices.length / PAGE_SIZE));
   const paged = sortedDevices.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(Math.max(1, totalPages));
+    }
+  }, [page, totalPages]);
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {

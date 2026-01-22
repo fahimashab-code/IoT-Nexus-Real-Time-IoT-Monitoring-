@@ -39,7 +39,7 @@ function SidebarNav() {
               isCollapsed && "justify-center px-2",
             )}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="h-5 w-5" />
             {!isCollapsed && <span>{item.label}</span>}
           </Link>
         );
@@ -69,7 +69,7 @@ export function Sidebar() {
             onClick={() => dispatch(toggleSidebar())}
             aria-label="Toggle sidebar"
           >
-            <PanelLeft className="h-4 w-4" />
+            <PanelLeft className="h-5 w-5" />
           </Button>
         </div>
         <div className="mt-8">

@@ -4,7 +4,6 @@ import { routes } from "@/config/routes";
 export const publicNav: NavItem[] = [
   { label: "Features", href: routes.public.home + "#features" },
   { label: "Pricing", href: routes.public.pricing },
-  { label: "Login", href: routes.auth.login },
 ];
 
 export const appNav: NavItem[] = [
