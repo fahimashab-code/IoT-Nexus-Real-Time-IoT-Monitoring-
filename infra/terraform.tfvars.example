@@ -1,1 +1,4 @@
 aws_region = "us-east-1"
+aws_account_id = "123456789012"
+# cognito_user_pool_name = "iot-dashboard-users"
+# cognito_app_client_name = "iot-dashboard-web"
