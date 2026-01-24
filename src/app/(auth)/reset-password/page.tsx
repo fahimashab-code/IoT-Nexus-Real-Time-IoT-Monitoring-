@@ -8,27 +8,70 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { VerificationCodeInput } from "@/components/ui/verification-code-input";
 import { toast } from "@/components/ui/use-toast";
 import { routes } from "@/config/routes";
+import { getAuthErrorMessage } from "@/lib/auth-errors";
+import { completePasswordReset } from "@/lib/cognito-client";
 import { resetPasswordSchema, type ResetPasswordValues } from "@/lib/validators";
+import { useEffect, useState } from "react";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
   const form = useForm<ResetPasswordValues>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
+      email: "",
       code: "",
       password: "",
       confirmPassword: "",
     },
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [code, setCode] = useState("");
+  const [codeTouched, setCodeTouched] = useState(false);
+  const isCodeValid = code.trim().length === 6;
 
-  const onSubmit = () => {
-    toast({
-      title: "Password updated",
-      description: "You can now sign in with your new password.",
-    });
-    router.push(routes.auth.login);
+  useEffect(() => {
+    const email = sessionStorage.getItem("iot_reset_email");
+    if (email) {
+      form.setValue("email", email);
+    }
+  }, [form]);
+
+  const onSubmit = async (values: ResetPasswordValues) => {
+    const trimmedCode = code.trim();
+    form.setValue("code", trimmedCode, { shouldValidate: true, shouldDirty: true });
+    if (trimmedCode.length !== 6) {
+      setCodeTouched(true);
+      toast({
+        title: "Invalid code",
+        description: "Enter the 6-digit reset code from your email.",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await completePasswordReset({
+        email: values.email,
+        code: trimmedCode,
+        password: values.password,
+      });
+      toast({
+        title: "Password updated",
+        description: "You can now sign in with your new password.",
+      });
+      sessionStorage.removeItem("iot_reset_email");
+      router.push(routes.auth.login);
+    } catch (error) {
+      toast({
+        title: "Reset failed",
+        description: getAuthErrorMessage(error),
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -44,17 +87,34 @@ export default function ResetPasswordPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="code"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reset code</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter the 6-digit code" {...field} />
+                    <Input placeholder="you@company.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Reset code</label>
+              <VerificationCodeInput
+                placeholder="Enter the 6-digit code"
+                value={code}
+                onChange={(nextValue) => {
+                  setCode(nextValue);
+                  setCodeTouched(true);
+                  form.setValue("code", nextValue, { shouldValidate: true, shouldDirty: true });
+                }}
+              />
+              {codeTouched && form.formState.errors.code ? (
+                <p className="text-sm font-medium text-destructive">
+                  {String(form.formState.errors.code.message)}
+                </p>
+              ) : null}
+            </div>
             <FormField
               control={form.control}
               name="password"
@@ -81,8 +141,8 @@ export default function ResetPasswordPage() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
-              Update password
+            <Button type="submit" className="w-full" disabled={isSubmitting || !isCodeValid}>
+              {isSubmitting ? "Updating..." : "Update password"}
             </Button>
           </form>
         </Form>

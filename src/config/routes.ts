@@ -6,6 +6,7 @@ export const routes = {
   auth: {
     login: "/login",
     register: "/register",
+    verify: "/verify",
     forgotPassword: "/forgot-password",
     resetPassword: "/reset-password",
     mfa: "/mfa",

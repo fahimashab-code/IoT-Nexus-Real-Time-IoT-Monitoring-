@@ -4,16 +4,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { routes } from "@/config/routes";
+import { getAuthErrorMessage } from "@/lib/auth-errors";
+import { startPasswordReset } from "@/lib/cognito-client";
 import { forgotPasswordSchema, type ForgotPasswordValues } from "@/lib/validators";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<ForgotPasswordValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -21,12 +25,26 @@ export default function ForgotPasswordPage() {
     },
   });
 
-  const onSubmit = (values: ForgotPasswordValues) => {
-    toast({
-      title: "Reset link sent",
-      description: `We emailed reset instructions to ${values.email}.`,
-    });
-    router.push(routes.auth.resetPassword);
+  const onSubmit = async (values: ForgotPasswordValues) => {
+    setIsSubmitting(true);
+    try {
+      const result = await startPasswordReset(values.email);
+      if (result.nextStep?.resetPasswordStep === "CONFIRM_RESET_PASSWORD_WITH_CODE") {
+        sessionStorage.setItem("iot_reset_email", values.email);
+        toast({
+          title: "Check your email",
+          description: `We sent a reset code to ${values.email}.`,
+        });
+        router.push(routes.auth.resetPassword);
+      }
+    } catch (error) {
+      toast({
+        title: "Reset failed",
+        description: getAuthErrorMessage(error),
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -53,8 +71,8 @@ export default function ForgotPasswordPage() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
-              Send reset link
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Sending..." : "Send reset code"}
             </Button>
           </form>
         </Form>
