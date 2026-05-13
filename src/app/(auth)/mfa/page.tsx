@@ -62,7 +62,7 @@ export default function MfaPage() {
   const finalizeSignIn = async () => {
     const idToken = await getIdToken();
     if (idToken) {
-      setSessionCookie(idToken);
+      await setSessionCookie(idToken);
     }
     const user = await getUserFromSession();
     if (user) {

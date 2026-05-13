@@ -13,22 +13,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     configureAmplify();
-    getUserFromSession()
-      .then((user) => {
+    const syncSession = async () => {
+      try {
+        const user = await getUserFromSession();
         if (user) {
           dispatch(setUser(user));
-          getIdToken().then((token) => {
-            if (token) setSessionCookie(token);
-          });
-        } else {
-          dispatch(clearUser());
-          clearSessionCookie();
+          const token = await getIdToken();
+          if (token) {
+            await setSessionCookie(token);
+          }
+          return;
         }
-      })
-      .catch(() => {
         dispatch(clearUser());
-        clearSessionCookie();
-      });
+        await clearSessionCookie();
+      } catch {
+        dispatch(clearUser());
+        await clearSessionCookie();
+      }
+    };
+    void syncSession();
   }, [dispatch]);
 
   return children;

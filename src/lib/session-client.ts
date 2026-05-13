@@ -1,16 +1,32 @@
 "use client";
 
-import { SESSION_COOKIE } from "@/lib/auth-constants";
+const SESSION_ENDPOINT = "/api/auth/session";
 
-const SESSION_MAX_AGE_SECONDS = 60 * 60;
+async function callSessionEndpoint(method: "POST" | "DELETE", token?: string) {
+  if (typeof window === "undefined") return;
+  try {
+    const response = await fetch(SESSION_ENDPOINT, {
+      method,
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: token ? JSON.stringify({ token }) : undefined,
+    });
 
-export function setSessionCookie(token: string) {
-  if (typeof document === "undefined") return;
-  const secure = typeof window !== "undefined" && window.location.protocol === "https:" ? " secure;" : "";
-  document.cookie = `${SESSION_COOKIE}=${token}; path=/; max-age=${SESSION_MAX_AGE_SECONDS}; samesite=lax;${secure}`;
+    if (!response.ok) {
+      console.warn("Session endpoint failed", { status: response.status });
+    }
+  } catch (error) {
+    console.warn("Session endpoint error", { message: (error as Error)?.message ?? "Unknown error" });
+  }
 }
 
-export function clearSessionCookie() {
-  if (typeof document === "undefined") return;
-  document.cookie = `${SESSION_COOKIE}=; path=/; max-age=0; samesite=lax;`;
+export async function setSessionCookie(token: string) {
+  if (!token) return;
+  await callSessionEndpoint("POST", token);
+}
+
+export async function clearSessionCookie() {
+  await callSessionEndpoint("DELETE");
 }

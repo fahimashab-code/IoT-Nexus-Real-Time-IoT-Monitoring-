@@ -5,7 +5,7 @@ Professional IoT dashboard starter built with the Next.js App Router. It include
 ## Features
 
 - App Router layouts for public, auth, and dashboard experiences.
-- Fake auth gate with middleware protection for `/app/*`.
+- Cognito auth flows with middleware protection for `/app/*`.
 - Dashboard with Recharts time-series and configurable gauge cards.
 - Device detail view with mock live telemetry and polling controls.
 - Dark/light theme with Tailwind CSS tokens.
@@ -29,9 +29,10 @@ npm run dev
 
 Open `http://localhost:3000`.
 
-To access the protected app routes, use the dummy auth screen:
-- Visit `http://localhost:3000/login`
-- Any credentials are accepted; a demo cookie is set automatically.
+Set Cognito environment variables in `.env.local` before signing in:
+- `NEXT_PUBLIC_COGNITO_USER_POOL_ID`
+- `NEXT_PUBLIC_COGNITO_CLIENT_ID`
+- `NEXT_PUBLIC_AWS_REGION`
 
 ## Routes
 
@@ -47,6 +48,36 @@ To access the protected app routes, use the dummy auth screen:
 - `/app/devices/[deviceId]`
 - `/app/alerts`
 - `/app/settings`
+
+## UI After Login
+
+Once authenticated, users land in the app shell with a left sidebar + top bar layout.
+
+### App Navigation
+
+Sidebar items (from `appNav`):
+- Dashboard — `/app/dashboard`
+- Devices — `/app/devices`
+- Alerts — `/app/alerts`
+- Settings — `/app/settings`
+
+Topbar elements:
+- Search input (desktop only)
+- Theme toggle
+- User menu (profile + sign out)
+
+### App Sections
+
+- Dashboard: fleet health snapshot, KPI cards, charts, and recent alerts.
+- Devices: fleet inventory table with an “Add device” dialog.
+- Alerts: active alerts list with severity badges and timestamps.
+- Settings: profile info (name/email), change password flow, and MFA management.
+
+### Route Categories
+
+- Public: `/`, `/pricing`
+- Auth: `/login`, `/register`, `/verify`, `/forgot-password`, `/reset-password`, `/mfa`
+- App (protected): `/app/*` routes listed above
 
 ## Gauge Controls
 

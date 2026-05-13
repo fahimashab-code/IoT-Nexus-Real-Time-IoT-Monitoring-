@@ -12,8 +12,8 @@ export function Topbar() {
   const dispatch = useAppDispatch();
 
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
-      <div className="flex items-center gap-3">
+    <header className="flex h-16 items-center justify-between border-b bg-background/90 px-4 shadow-sm backdrop-blur md:px-6">
+      <div className="flex items-center gap-4">
         <Button
           variant="ghost"
           size="icon"
@@ -27,7 +27,7 @@ export function Topbar() {
           <Input placeholder="Search devices..." className="pl-9" />
         </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <ThemeToggle />
         <UserNav />
       </div>

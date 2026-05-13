@@ -32,7 +32,6 @@ export async function getSession() {
       id,
       name,
       email,
-      role: "Operator",
     };
 
     return { user };
@@ -66,7 +65,6 @@ export async function requireAuth() {
       id,
       name,
       email,
-      role: "Operator",
     };
 
     return { user };

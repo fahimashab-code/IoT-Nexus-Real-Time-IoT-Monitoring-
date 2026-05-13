@@ -426,7 +426,6 @@ export async function getUserFromSession(): Promise<User | null> {
     id,
     name,
     email,
-    role: "Operator",
   };
 }
 

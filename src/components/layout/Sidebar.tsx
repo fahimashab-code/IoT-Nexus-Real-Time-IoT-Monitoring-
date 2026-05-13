@@ -23,7 +23,7 @@ function SidebarNav() {
   const isCollapsed = useAppSelector((state) => state.ui.sidebarCollapsed);
 
   return (
-    <nav className="flex flex-col gap-1">
+    <nav className={cn("flex flex-col gap-1.5", isCollapsed && "items-center")}>
       {appNav.map((item) => {
         const Icon = iconMap[item.icon ?? "gauge"];
         const isActive = pathname.startsWith(item.href);
@@ -31,16 +31,17 @@ function SidebarNav() {
           <Link
             key={item.href}
             href={item.href}
+            aria-label={item.label}
             className={cn(
-              "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
               isActive
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",
-              isCollapsed && "justify-center px-2",
+              isCollapsed && "h-11 w-11 justify-center px-0",
             )}
           >
-            <Icon className="h-5 w-5" />
-            {!isCollapsed && <span>{item.label}</span>}
+            <Icon className={cn("h-5 w-5 shrink-0", isCollapsed && "h-6 w-6")} />
+            {!isCollapsed && <span className="truncate">{item.label}</span>}
           </Link>
         );
       })}
@@ -61,8 +62,13 @@ export function Sidebar() {
           isCollapsed ? "w-20" : "w-64",
         )}
       >
-        <div className={cn("flex items-center justify-between", isCollapsed && "flex-col gap-2")}>
-          <Logo className={cn(isCollapsed && "flex-col text-xs")} />
+        <div
+          className={cn(
+            "flex items-center justify-between gap-3 border-b border-border/60 pb-4",
+            isCollapsed && "flex-col",
+          )}
+        >
+          <Logo showText={false} />
           <Button
             variant="ghost"
             size="icon"
@@ -87,7 +93,7 @@ export function Sidebar() {
 
       <Sheet open={mobileOpen} onOpenChange={(open) => dispatch(setMobileSidebarOpen(open))}>
         <SheetContent side="left" className="w-72 p-4">
-          <Logo />
+          <Logo showText={false} />
           <div className="mt-8">
             <SidebarNav />
           </div>

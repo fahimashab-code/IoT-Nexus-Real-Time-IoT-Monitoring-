@@ -40,7 +40,6 @@ export default function SettingsPage() {
     defaultValues: {
       name: user?.name ?? "",
       email: user?.email ?? "",
-      role: user?.role ?? "Operator",
     },
   });
   const passwordForm = useForm<ChangePasswordValues>({
@@ -68,7 +67,6 @@ export default function SettingsPage() {
       form.reset({
         name: user.name,
         email: user.email,
-        role: user.role,
       });
     }
   }, [user, form]);
@@ -76,7 +74,7 @@ export default function SettingsPage() {
   const onSubmit = (values: ProfileValues) => {
     toast({
       title: "Profile updated",
-      description: `Role set to ${values.role}`,
+      description: `Saved ${values.name}.`,
     });
   };
 
@@ -238,26 +236,6 @@ export default function SettingsPage() {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input type="email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Role</FormLabel>
-                    <FormControl>
-                      <select
-                        {...field}
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      >
-                        <option value="Admin">Admin</option>
-                        <option value="Operator">Operator</option>
-                        <option value="Viewer">Viewer</option>
-                      </select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

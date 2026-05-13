@@ -82,7 +82,6 @@ export const deviceSchema = z.object({
 export const profileSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Enter a valid email." }),
-  role: z.enum(["Admin", "Operator", "Viewer"]),
 });
 
 export type LoginValues = z.infer<typeof loginSchema>;

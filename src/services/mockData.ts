@@ -1,7 +1,7 @@
 import { buildAlerts, buildDevices, buildTelemetry } from "@/lib/mock-data-generator";
 import type { Alert, Device, TelemetryPoint } from "@/types";
 
-const devices = buildDevices(26);
+const devices = buildDevices(4);
 const alerts = buildAlerts(10);
 
 export function getDevices(): Device[] {

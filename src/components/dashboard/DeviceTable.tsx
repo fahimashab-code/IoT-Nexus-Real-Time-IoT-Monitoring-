@@ -1,15 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { routeBuilders } from "@/config/routes";
 import type { Device } from "@/types";
-
-const PAGE_SIZE = 8;
 
 type SortKey = "name" | "status" | "location" | "battery";
 
@@ -18,7 +15,6 @@ interface DeviceTableProps {
 }
 
 export function DeviceTable({ devices }: DeviceTableProps) {
-  const [page, setPage] = useState(1);
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
@@ -37,14 +33,7 @@ export function DeviceTable({ devices }: DeviceTableProps) {
     return list;
   }, [devices, sortKey, sortDir]);
 
-  const totalPages = Math.max(1, Math.ceil(sortedDevices.length / PAGE_SIZE));
-  const paged = sortedDevices.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  useEffect(() => {
-    if (page > totalPages) {
-      setPage(Math.max(1, totalPages));
-    }
-  }, [page, totalPages]);
+  const paged = sortedDevices;
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -109,28 +98,8 @@ export function DeviceTable({ devices }: DeviceTableProps) {
         </TableBody>
       </Table>
 
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <span>
-          Page {page} of {totalPages}
-        </span>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page === 1}
-            onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page === totalPages}
-            onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
-          >
-            Next
-          </Button>
-        </div>
+      <div className="text-sm text-muted-foreground">
+        Showing {paged.length} device{paged.length === 1 ? "" : "s"}
       </div>
     </div>
   );

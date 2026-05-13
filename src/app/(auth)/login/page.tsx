@@ -43,7 +43,7 @@ export default function LoginPage() {
   const finalizeSignIn = async (email: string) => {
     const idToken = await getIdToken();
     if (idToken) {
-      setSessionCookie(idToken);
+      await setSessionCookie(idToken);
     }
     const user = await getUserFromSession();
     if (user) {

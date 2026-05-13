@@ -25,7 +25,7 @@ export function UserNav() {
 
   const handleSignOut = async () => {
     await signOutUser();
-    clearSessionCookie();
+    await clearSessionCookie();
     dispatch(clearUser());
     router.push(routes.auth.login);
   };

@@ -34,7 +34,6 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: "Admin" | "Operator" | "Viewer";
 }
 
 export interface NavItem {
