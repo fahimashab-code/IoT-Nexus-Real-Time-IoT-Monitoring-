@@ -1,9 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LockKeyhole, ShieldCheck, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -205,153 +212,183 @@ export default function SettingsPage() {
       <div>
         <h1 className="text-2xl font-semibold">Settings</h1>
         <p className="text-sm text-muted-foreground">
-          Manage your profile and notification preferences.
+          Manage your profile, password, and sign-in security.
         </p>
       </div>
-      <Card className="max-w-2xl">
-        <CardHeader>
-          <CardTitle>Profile</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">Save changes</Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-      <Card className="max-w-2xl">
-        <CardHeader>
-          <CardTitle>Change password</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setShowPasswordForm((prev) => !prev)}
-            >
-              {showPasswordForm ? "Hide change password" : "Change password"}
-            </Button>
-            {showPasswordForm ? (
-              <Form {...passwordForm}>
-                <form
-                  onSubmit={passwordForm.handleSubmit(handlePasswordUpdate)}
-                  className="space-y-4"
-                >
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <span className="rounded-md bg-muted p-2 text-primary">
+                  <User className="h-5 w-5" />
+                </span>
+                <div>
+                  <CardTitle>Profile</CardTitle>
+                  <CardDescription>Keep operator identity details current.</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
-                    control={passwordForm.control}
-                    name="currentPassword"
+                    control={form.control}
+                    name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Current password</FormLabel>
+                        <FormLabel>Name</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="********" {...field} />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   <FormField
-                    control={passwordForm.control}
-                    name="newPassword"
+                    control={form.control}
+                    name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>New password</FormLabel>
+                        <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="********" {...field} />
-                        </FormControl>
-                        <p className="text-xs text-muted-foreground">{passwordHelp}</p>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={passwordForm.control}
-                    name="confirmNewPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Confirm new password</FormLabel>
-                        <FormControl>
-                          <Input type="password" placeholder="********" {...field} />
+                          <Input type="email" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button
-                    type="submit"
-                    disabled={!passwordForm.formState.isValid || isUpdatingPassword}
-                  >
-                    {isUpdatingPassword ? "Updating..." : "Update password"}
-                  </Button>
+                  <Button type="submit">Save changes</Button>
                 </form>
               </Form>
-            ) : null}
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="max-w-2xl">
-        <CardHeader>
-          <CardTitle>Multi-factor authentication</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
-            <div>
-              <p className="font-medium">
-                Status:{" "}
-                {mfaEnabled === null ? "Loading..." : mfaEnabled ? "Enabled" : "Disabled"}
-              </p>
-              <p className="text-muted-foreground">
-                Use an authenticator app to protect your account.
-              </p>
-            </div>
-            {mfaEnabled ? (
-              <Button
-                variant="outline"
-                onClick={() => setShowDisableDialog(true)}
-                disabled={mfaLoading}
-              >
-                {mfaLoading ? "Updating..." : "Disable MFA"}
-              </Button>
-            ) : (
-              <Button onClick={handleStartMfaSetup} disabled={mfaLoading}>
-                {mfaLoading ? "Preparing..." : "Enable MFA"}
-              </Button>
-            )}
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className="text-xs text-muted-foreground">
-            Lost your authenticator? Contact support to reset MFA.
-          </div>
-        </CardContent>
-      </Card>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <span className="rounded-md bg-muted p-2 text-primary">
+                  <LockKeyhole className="h-5 w-5" />
+                </span>
+                <div>
+                  <CardTitle>Change password</CardTitle>
+                  <CardDescription>Update credentials without leaving settings.</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowPasswordForm((prev) => !prev)}
+                >
+                  {showPasswordForm ? "Hide change password" : "Change password"}
+                </Button>
+                {showPasswordForm ? (
+                  <Form {...passwordForm}>
+                    <form
+                      onSubmit={passwordForm.handleSubmit(handlePasswordUpdate)}
+                      className="space-y-4"
+                    >
+                      <FormField
+                        control={passwordForm.control}
+                        name="currentPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Current password</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="********" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={passwordForm.control}
+                        name="newPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>New password</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="********" {...field} />
+                            </FormControl>
+                            <p className="text-xs text-muted-foreground">{passwordHelp}</p>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={passwordForm.control}
+                        name="confirmNewPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Confirm new password</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="********" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        type="submit"
+                        disabled={!passwordForm.formState.isValid || isUpdatingPassword}
+                      >
+                        {isUpdatingPassword ? "Updating..." : "Update password"}
+                      </Button>
+                    </form>
+                  </Form>
+                ) : null}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="h-fit">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <span className="rounded-md bg-muted p-2 text-primary">
+                <ShieldCheck className="h-5 w-5" />
+              </span>
+              <div>
+                <CardTitle>Multi-factor authentication</CardTitle>
+                <CardDescription>Protect sign-in with an authenticator app.</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
+              <div>
+                <p className="font-medium">
+                  Status:{" "}
+                  {mfaEnabled === null ? "Loading..." : mfaEnabled ? "Enabled" : "Disabled"}
+                </p>
+                <p className="text-muted-foreground">
+                  Use an authenticator app to protect your account.
+                </p>
+              </div>
+              {mfaEnabled ? (
+                <Button
+                  variant="outline"
+                  onClick={() => setShowDisableDialog(true)}
+                  disabled={mfaLoading}
+                >
+                  {mfaLoading ? "Updating..." : "Disable MFA"}
+                </Button>
+              ) : (
+                <Button onClick={handleStartMfaSetup} disabled={mfaLoading}>
+                  {mfaLoading ? "Preparing..." : "Enable MFA"}
+                </Button>
+              )}
+            </div>
+
+            <div className="text-xs text-muted-foreground">
+              Lost your authenticator? Contact support to reset MFA.
+            </div>
+          </CardContent>
+        </Card>
+      </div>
       <Dialog open={showMfaDialog} onOpenChange={setShowMfaDialog}>
         <DialogContent className="max-w-md">
           <DialogHeader>
