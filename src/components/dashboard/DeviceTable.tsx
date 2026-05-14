@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowDown, ArrowUp } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { DeviceStatusBadge } from "@/components/devices/DeviceStatusBadge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { routeBuilders } from "@/config/routes";
 import type { Device } from "@/types";
@@ -44,12 +44,6 @@ export function DeviceTable({ devices }: DeviceTableProps) {
     }
   };
 
-  const statusClasses: Record<Device["status"], string> = {
-    online: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
-    warning: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
-    offline: "bg-rose-500/15 text-rose-600 dark:text-rose-400",
-  };
-
   return (
     <div className="space-y-4">
       <Table>
@@ -86,9 +80,7 @@ export function DeviceTable({ devices }: DeviceTableProps) {
                 </Link>
               </TableCell>
               <TableCell>
-                <Badge variant="outline" className={statusClasses[device.status]}>
-                  {device.status}
-                </Badge>
+                <DeviceStatusBadge status={device.status} />
               </TableCell>
               <TableCell>{device.location}</TableCell>
               <TableCell>{device.battery}%</TableCell>
