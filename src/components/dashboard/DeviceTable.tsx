@@ -4,7 +4,15 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { DeviceStatusBadge } from "@/components/devices/DeviceStatusBadge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { routeBuilders } from "@/config/routes";
 import type { Device } from "@/types";
 
@@ -44,28 +52,62 @@ export function DeviceTable({ devices }: DeviceTableProps) {
     }
   };
 
+  const renderSortIcon = (key: SortKey) => {
+    if (sortKey !== key) {
+      return null;
+    }
+
+    return sortDir === "asc" ? (
+      <ArrowUp className="h-3 w-3" />
+    ) : (
+      <ArrowDown className="h-3 w-3" />
+    );
+  };
+
+  const getBatteryClass = (battery: number) => {
+    if (battery >= 70) {
+      return "bg-emerald-500";
+    }
+    if (battery >= 35) {
+      return "bg-amber-500";
+    }
+    return "bg-rose-500";
+  };
+
   return (
     <div className="space-y-4">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>
-              <button type="button" onClick={() => handleSort("name")} className="inline-flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => handleSort("name")}
+                className="inline-flex items-center gap-1 rounded px-1 py-0.5 hover:bg-muted"
+              >
                 Device
-                {sortKey === "name" && (sortDir === "asc" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />)}
+                {renderSortIcon("name")}
               </button>
             </TableHead>
             <TableHead>Status</TableHead>
             <TableHead>
-              <button type="button" onClick={() => handleSort("location")} className="inline-flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => handleSort("location")}
+                className="inline-flex items-center gap-1 rounded px-1 py-0.5 hover:bg-muted"
+              >
                 Location
-                {sortKey === "location" && (sortDir === "asc" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />)}
+                {renderSortIcon("location")}
               </button>
             </TableHead>
             <TableHead>
-              <button type="button" onClick={() => handleSort("battery")} className="inline-flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => handleSort("battery")}
+                className="inline-flex items-center gap-1 rounded px-1 py-0.5 hover:bg-muted"
+              >
                 Battery
-                {sortKey === "battery" && (sortDir === "asc" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />)}
+                {renderSortIcon("battery")}
               </button>
             </TableHead>
             <TableHead>Firmware</TableHead>
@@ -83,7 +125,19 @@ export function DeviceTable({ devices }: DeviceTableProps) {
                 <DeviceStatusBadge status={device.status} />
               </TableCell>
               <TableCell>{device.location}</TableCell>
-              <TableCell>{device.battery}%</TableCell>
+              <TableCell>
+                <div className="flex min-w-28 items-center gap-3">
+                  <div className="h-2 flex-1 rounded-full bg-muted">
+                    <div
+                      className={cn("h-2 rounded-full", getBatteryClass(device.battery))}
+                      style={{ width: `${device.battery}%` }}
+                    />
+                  </div>
+                  <span className="w-9 text-right text-sm tabular-nums">
+                    {device.battery}%
+                  </span>
+                </div>
+              </TableCell>
               <TableCell>{device.firmware}</TableCell>
             </TableRow>
           ))}
