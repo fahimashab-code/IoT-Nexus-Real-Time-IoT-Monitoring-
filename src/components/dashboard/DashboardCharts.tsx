@@ -10,7 +10,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getTelemetry } from "@/services/mockData";
 
@@ -18,9 +24,18 @@ export function DashboardCharts() {
   const data = useMemo(() => getTelemetry(), []);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Telemetry Overview</CardTitle>
+    <Card className="overflow-hidden">
+      <CardHeader className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        <div>
+          <CardTitle>Telemetry Overview</CardTitle>
+          <CardDescription>
+            Compare environmental and power movement over the last 24 readings.
+          </CardDescription>
+        </div>
+        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+          <span className="rounded-full border px-2 py-1">24 samples</span>
+          <span className="rounded-full border px-2 py-1">Live feed</span>
+        </div>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="environment">
