@@ -1,17 +1,10 @@
-import { Badge } from "@/components/ui/badge";
+import { AlertSeverityBadge } from "@/components/alerts/AlertSeverityBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAlerts } from "@/services/mockData";
 import { formatTimestamp } from "@/lib/utils";
 
 export default function AlertsPage() {
   const alerts = getAlerts();
-
-  const severityClasses: Record<string, string> = {
-    critical: "bg-rose-500/15 text-rose-600 dark:text-rose-400",
-    high: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
-    medium: "bg-sky-500/15 text-sky-600 dark:text-sky-400",
-    low: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
-  };
 
   return (
     <div className="space-y-6">
@@ -33,9 +26,7 @@ export default function AlertsPage() {
                   <p className="text-sm font-semibold">{alert.deviceName}</p>
                   <p className="text-sm text-muted-foreground">{alert.message}</p>
                 </div>
-                <Badge variant="outline" className={severityClasses[alert.severity]}>
-                  {alert.severity}
-                </Badge>
+                <AlertSeverityBadge severity={alert.severity} />
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
                 {formatTimestamp(alert.timestamp)}
