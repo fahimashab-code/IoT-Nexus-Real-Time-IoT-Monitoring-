@@ -24,6 +24,11 @@ function SidebarNav() {
 
   return (
     <nav className={cn("flex flex-col gap-1.5", isCollapsed && "items-center")}>
+      {!isCollapsed && (
+        <p className="px-3 pb-2 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+          Workspace
+        </p>
+      )}
       {appNav.map((item) => {
         const Icon = iconMap[item.icon ?? "gauge"];
         const isActive = pathname.startsWith(item.href);
@@ -33,13 +38,16 @@ function SidebarNav() {
             href={item.href}
             aria-label={item.label}
             className={cn(
-              "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+              "relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
               isActive
-                ? "bg-primary text-primary-foreground"
+                ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",
               isCollapsed && "h-11 w-11 justify-center px-0",
             )}
           >
+            {isActive && !isCollapsed ? (
+              <span className="absolute left-0 h-6 w-1 rounded-r-full bg-primary-foreground/80" />
+            ) : null}
             <Icon className={cn("h-5 w-5 shrink-0", isCollapsed && "h-6 w-6")} />
             {!isCollapsed && <span className="truncate">{item.label}</span>}
           </Link>
@@ -82,7 +90,9 @@ export function Sidebar() {
           <SidebarNav />
         </div>
         <div className="mt-auto rounded-lg border bg-muted/50 p-3 text-xs text-muted-foreground">
-          {!isCollapsed && (
+          {isCollapsed ? (
+            <div className="mx-auto h-2.5 w-2.5 rounded-full bg-emerald-500" />
+          ) : (
             <>
               <p className="font-semibold text-foreground">Fleet Status</p>
               <p className="mt-1">96% devices reporting in the last hour.</p>
