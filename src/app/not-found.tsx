@@ -1,26 +1,16 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { routes } from "@/config/routes";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
-  const router = useRouter();
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.history.length > 1) {
-      router.back();
-    } else {
-      router.replace(routes.app.dashboard);
-    }
-  }, [router]);
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/30 px-6">
-      <div className="rounded-xl border border-dashed border-muted-foreground/30 bg-background p-6 text-center text-sm text-muted-foreground">
-        Redirecting...
-      </div>
-    </div>
+    <section className="panel large-empty">
+      <span className="section-kicker">404 / PAGE NOT FOUND</span>
+      <h1>This page isn’t on the bench.</h1>
+      <p>The workspace has been simplified. Continue to the motor test bench.</p>
+      <Link href="/" className="button button-primary">
+        <ArrowLeft size={16} />
+        Back to the bench
+      </Link>
+    </section>
   );
 }

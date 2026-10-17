@@ -1,112 +1,54 @@
-# IoT Nexus — Real-Time IoT Monitoring Dashboard
+# IoT Nexus — Embedded Motor Laboratory
 
-Professional IoT dashboard starter built with the Next.js App Router. It includes a public marketing site, auth scaffolding, and a protected app area with device telemetry visualizations.
+A focused, account-free workspace for a motor-control and fault-detection portfolio project. Built with Next.js 16, React 19, TypeScript, Recharts, and Lucide icons.
 
-## Features
+## Current scope
 
-- App Router layouts for public, auth, and dashboard experiences.
-- Cognito auth flows with middleware protection for `/app/*`.
-- Dashboard with Recharts time-series and configurable gauge cards.
-- Device detail view with mock live telemetry and polling controls.
-- Dark/light theme with Tailwind CSS tokens.
-- Redux Toolkit for UI/session state and a mock-data service layer.
+- **Test bench (`/`)**: an illustrative motor layout, requested-speed control, selectable demo conditions, four sensor readings, a measurement chart, and session activity.
+- **Experiments (`/experiments`)**: review recorded demo runs and export their samples as CSV.
+- **Device settings (`/settings`)**: configure the bench name, demo speed range, sample interval, and warning thresholds.
 
-## Tech Stack
+All measurements are explicitly **simulated**. Run demo starts the local simulation. Stop & save stops generation and saves the captured samples in browser storage. Each run is capped at 1,200 samples; reaching that cap stops and saves it automatically. The latest 12 runs are retained. Export runs to preserve them beyond browser storage or eviction. Refreshing or closing the page ends an active, unsaved run.
 
-- Next.js (App Router) + TypeScript (strict)
-- Tailwind CSS + shadcn/ui
-- Redux Toolkit
-- Recharts
-- React Hook Form + Zod
-- Lucide React icons
+The response generator is an illustrative UI model, not an identified physical motor model or evidence of a working controller. The demo has no ESP32 connection, MQTT backend, physical motor actuation, or trained fault-detection model. Warning thresholds only affect the demo display.
 
-## Getting Started
+## Run locally
 
-```bash
+```sh
 npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:3000`. No account, Cognito configuration, or AWS credentials are required.
 
-Set Cognito environment variables in `.env.local` before signing in:
-- `NEXT_PUBLIC_COGNITO_USER_POOL_ID`
-- `NEXT_PUBLIC_COGNITO_CLIENT_ID`
-- `NEXT_PUBLIC_AWS_REGION`
-
-## Routes
-
-- `/` Landing page
-- `/pricing`
-- `/login`
-- `/register`
-- `/forgot-password`
-- `/reset-password`
-- `/mfa`
-- `/app/dashboard`
-- `/app/devices`
-- `/app/devices/[deviceId]`
-- `/app/alerts`
-- `/app/settings`
-
-## UI After Login
-
-Once authenticated, users land in the app shell with a left sidebar + top bar layout.
-
-### App Navigation
-
-Sidebar items (from `appNav`):
-- Dashboard — `/app/dashboard`
-- Devices — `/app/devices`
-- Alerts — `/app/alerts`
-- Settings — `/app/settings`
-
-Topbar elements:
-- Search input (desktop only)
-- Theme toggle
-- User menu (profile + sign out)
-
-### App Sections
-
-- Dashboard: fleet health snapshot, KPI cards, charts, and recent alerts.
-- Devices: fleet inventory table with an “Add device” dialog.
-- Alerts: active alerts list with severity badges and timestamps.
-- Settings: profile info (name/email), change password flow, and MFA management.
-
-### Route Categories
-
-- Public: `/`, `/pricing`
-- Auth: `/login`, `/register`, `/verify`, `/forgot-password`, `/reset-password`, `/mfa`
-- App (protected): `/app/*` routes listed above
-
-## Gauge Controls
-
-Each gauge card includes a 3-dot menu for settings:
-- Range min/max
-- Threshold colors and limits
-- Reducer (last/avg/min/max/delta)
-- Color mode (thresholds/value/neutral)
-- Orientation (semi/full)
-- No-data behavior
-- Unit + decimals
-- Display toggles and value mappings
-
-## Project Structure
-
-```
-src/
-  app/                # App Router routes + layouts
-  components/         # UI and dashboard components
-  config/             # Navigation and route constants
-  lib/                # Auth, validators, gauge logic, utils
-  services/           # Mock data providers
-  store/              # Redux Toolkit store and slices
-  types/              # Shared TypeScript types
+```sh
+npm run lint
+npm run build
+npm run start
 ```
 
-## Scripts
+Existing webpack and Turbopack scripts are preserved. The site uses system fonts and does not need to download fonts during a build.
 
-- `npm run dev` Start dev server
-- `npm run build` Production build
-- `npm run start` Run production server
-- `npm run lint` Lint check
+## Authentication removal
+
+Login, registration, verification, password reset, MFA, account settings, auth providers, session endpoints, and authentication middleware have been removed from the application. Old `/app/*` bookmarks redirect to the simplified workspace. Removed authentication and pricing URLs return a normal 404.
+
+The historical Terraform files in `infra/` are retained for reference and are not used by this application. No infrastructure has been applied or destroyed. Do not apply that folder to run the demo.
+
+## Next hardware stage
+
+1. Implement and validate ESP32 sensing and local motor control.
+2. Add a device connection and durable measurement storage.
+3. Require device acknowledgements before showing a physical command as applied.
+4. Keep local limits and protective behaviour on the device.
+5. Evaluate fault-detection methods with recorded physical experiments.
+
+## Source
+
+```text
+src/app/                   Pages and global visual styles
+src/components/bench/      Shared demo state, motor illustration, measurement chart
+src/components/layout/     Workspace navigation and shell
+src/lib/bench-model.ts     Demo types, response generator, CSV export
+src/lib/bench-storage.ts   Validated local settings and experiment storage
+```
