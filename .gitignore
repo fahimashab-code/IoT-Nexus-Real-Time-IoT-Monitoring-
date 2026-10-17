@@ -46,3 +46,11 @@ next-env.d.ts
 **/*.tfstate
 **/*.tfstate.*
 **/terraform.tfvars
+
+# MATLAB local caches and full workspace recordings
+**/slprj/
+**/sccprj/
+*.slxc
+*.slx.autosave
+*.asv
+/simulation/matlab/results/

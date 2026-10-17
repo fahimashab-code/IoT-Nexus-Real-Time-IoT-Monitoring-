@@ -35,13 +35,21 @@ Login, registration, verification, password reset, MFA, account settings, auth p
 
 The historical Terraform files in `infra/` are retained for reference and are not used by this application. No infrastructure has been applied or destroyed. Do not apply that folder to run the demo.
 
-## Next hardware stage
+## MATLAB simulation stage
 
-1. Implement and validate ESP32 sensing and local motor control.
-2. Add a device connection and durable measurement storage.
-3. Require device acknowledgements before showing a physical command as applied.
-4. Keep local limits and protective behaviour on the device.
-5. Evaluate fault-detection methods with recorded physical experiments.
+Start with [motor basics and lesson 01](docs/matlab/01-motor-basics.md), then follow the [MATLAB run instructions](simulation/matlab/README.md). Keep the [learning journal](docs/matlab/learning-journal.md) as the ongoing record for the portfolio and a future blog.
+
+A [readable Word copy of session 01](docs/matlab/IoT%20Nexus%20MATLAB%20Learning%20Journal.docx) includes the concepts, equations, model diagram, plots and recorded results. The Markdown journal is the ongoing source record.
+
+The first lesson builds an editable DC motor model in Simulink, compares fixed-voltage runs with and without an added shaft load, and saves plots, CSV recordings and validation results. Its motor parameters are explicit teaching assumptions. This stage requires no hardware purchase and does not change the website's illustrative response generator.
+
+## Development direction
+
+1. Understand and check the simulated motor's current, torque and speed.
+2. Compare the equation model with a Simscape Electrical circuit.
+3. Add speed control and evaluate load-disturbance recovery.
+4. Add reproducible monitoring experiments and import their recordings into Nexus.
+5. Consider physical validation later if useful; select hardware only after revisiting that decision.
 
 ## Source
 
@@ -51,4 +59,6 @@ src/components/bench/      Shared demo state, motor illustration, measurement ch
 src/components/layout/     Workspace navigation and shell
 src/lib/bench-model.ts     Demo types, response generator, CSV export
 src/lib/bench-storage.ts   Validated local settings and experiment storage
+simulation/matlab/        Reproducible motor model and experiment recordings
+docs/matlab/              Motor concepts and ongoing learning journal
 ```

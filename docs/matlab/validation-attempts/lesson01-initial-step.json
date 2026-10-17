@@ -1,0 +1,55 @@
+{
+  "lesson": "01",
+  "evidence": "MATLAB Simulink simulation only",
+  "model_type": "Assumed linear permanent-magnet DC motor",
+  "created_local": "2026-10-17 22:11:06 +06:00",
+  "matlab_release": "2026b",
+  "solver": "ode4",
+  "parameters": {
+    "voltage_V": 6,
+    "resistance_ohm": 2,
+    "inductance_H": 0.002,
+    "torqueConstant_Nm_per_A": 0.02,
+    "backEmfConstant_V_per_rad_s": 0.02,
+    "inertia_kg_m2": 2E-5,
+    "viscousFriction_Nm_per_rad_s": 2E-5,
+    "voltageOn_s": 0.05,
+    "loadStep_s": 1,
+    "loadTorque_Nm": 0.01,
+    "stopTime_s": 2,
+    "solverStep_s": 0.0001
+  },
+  "baseline": {
+    "steady_speed_rpm": 2604.3536123551335,
+    "steady_current_A": 0.27272727471376507,
+    "predicted_speed_rpm": 2604.3536142310149,
+    "predicted_current_A": 0.27272727272727276,
+    "speed_error_percent": 7.2028678061335349E-8,
+    "current_error_percent": 7.2838051146106853E-7,
+    "peak_current_A": 2.8908075449737929,
+    "steady_winding_loss_W": 0.148760332745595,
+    "steady_load_power_W": 0
+  },
+  "loaded": {
+    "steady_speed_rpm": 2170.3065600787077,
+    "steady_current_A": 0.72726014512212411,
+    "predicted_speed_rpm": 2170.2946785258455,
+    "predicted_current_A": 0.72727272727272729,
+    "speed_error_percent": 0.00054746265471417521,
+    "current_error_percent": 0.0017300457079372222,
+    "peak_current_A": 2.8908075449737929,
+    "steady_winding_loss_W": 1.0578146373980981,
+    "steady_load_power_W": 2.2727397150603337
+  },
+  "checks": {
+    "finite_signals": true,
+    "baseline_matches_equilibrium": true,
+    "loaded_matches_equilibrium": true,
+    "load_reduces_speed": true,
+    "load_increases_current": true,
+    "solver_refinement": false
+  },
+  "max_refinement_speed_difference_rpm": 0.19508548754555477,
+  "max_refinement_current_difference_A": 0.00020658867878431408,
+  "all_checks_passed": false
+}
